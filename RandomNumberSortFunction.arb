@@ -1,0 +1,112 @@
+# Function to generate a list of 25 random numbers
+def generate_random_numbers(size = 25, max_value = 100)
+    # Creates an array of given size with random numbers between 1 and max_value
+    Array.new(size) { rand(1..max_value) }
+  end
+  
+  # Radix sort helper functions
+  def counting_sort(arr, exp)
+    n = arr.size
+    output = Array.new(n)  # Array to store sorted numbers
+    count = Array.new(10, 0)  # Array to store count of occurrences of digits (0-9)
+  
+    # Store count of occurrences in count[]
+    arr.each do |num|
+      index = (num / exp) % 10
+      count[index] += 1
+    end
+  
+    # Change count[i] so that count[i] now contains actual position of this digit in output[]
+    (1..9).each do |i|
+      count[i] += count[i - 1]
+    end
+  
+    # Build the output array
+    (n - 1).downto(0) do |i|
+      index = (arr[i] / exp) % 10
+      output[count[index] - 1] = arr[i]
+      count[index] -= 1
+    end
+  
+    # Copy the output array to arr[], so that arr[] now contains sorted numbers according to the current digit
+    (0...n).each do |i|
+      arr[i] = output[i]
+    end
+  end
+  
+  def radix_sort(arr)
+    # Find the maximum number to know the number of digits
+    max_num = arr.max
+  
+    # Do counting sort for every digit
+    exp = 1
+    while max_num / exp > 0
+      counting_sort(arr, exp)
+      exp *= 10
+    end
+  
+    arr.reverse!  # Reverse the array for descending order
+  end
+  
+  # Bubble sort function
+  def bubble_sort(arr)
+    n = arr.size
+    loop do
+      swapped = false
+      (n-1).times do |i|
+        if arr[i] > arr[i+1]
+          arr[i], arr[i+1] = arr[i+1], arr[i]  # Swap if the element found is greater
+          swapped = true
+        end
+      end
+      break unless swapped  # If no elements were swapped, the array is sorted
+    end
+    arr
+  end
+  
+  # Binary search function
+  def binary_search(arr, k)
+    low = 0
+    high = arr.size - 1
+  
+    while low <= high
+      mid = (low + high) / 2
+  
+      if arr[mid] == k
+        return mid
+      elsif arr[mid] < k
+        low = mid + 1
+      else
+        high = mid - 1
+      end
+    end
+  
+    return -1  # Return -1 if the element is not found
+  end
+  
+  # Generate a list of 25 random numbers
+  random_numbers = generate_random_numbers
+  puts "Random Numbers: #{random_numbers.inspect}"
+  
+  # Sort the numbers in descending order using radix sort
+  sorted_desc = random_numbers.dup
+  radix_sort(sorted_desc)
+  puts "Sorted Numbers (Descending, Radix Sort): #{sorted_desc.inspect}"
+  
+  # Sort the numbers in ascending order using bubble sort
+  sorted_asc = random_numbers.dup
+  bubble_sort(sorted_asc)
+  puts "Sorted Numbers (Ascending, Bubble Sort): #{sorted_asc.inspect}"
+  
+  # Prompt the user to enter the number to search for
+  puts "Enter the number to search for: "
+  k = gets.chomp.to_i
+  
+  # Search for the number using binary search
+  index = binary_search(sorted_asc, k)
+  if index != -1
+    puts "Number #{k} found at index #{index} using binary search."
+  else
+    puts "Number #{k} not found using binary search."
+  end
+  
