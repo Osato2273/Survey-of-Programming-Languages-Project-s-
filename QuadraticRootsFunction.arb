@@ -1,0 +1,53 @@
+# Function to calculate the roots of a quadratic equation
+def find_roots(a, b, c)
+    # Calculate the discriminant
+    discriminant = b**2 - 4 * a * c
+  
+    if discriminant > 0
+      # Two distinct real roots
+      root1 = (-b + Math.sqrt(discriminant)) / (2 * a)
+      root2 = (-b - Math.sqrt(discriminant)) / (2 * a)
+      roots = [root1, root2]
+      root_type = "two distinct real roots"
+    elsif discriminant == 0
+      # One real root (repeated root)
+      root = -b / (2 * a)
+      roots = [root]
+      root_type = "one repeated real root"
+    else
+      # Two complex roots
+      real_part = -b / (2 * a)
+      imaginary_part = Math.sqrt(-discriminant) / (2 * a)
+      roots = [complex(real_part, imaginary_part), complex(real_part, -imaginary_part)]
+      root_type = "two complex roots"
+    end
+  
+    return roots, root_type
+  end
+  
+  # Function to create a complex number
+  def complex(real, imaginary)
+    "#{real} + #{imaginary}i"
+  end
+  
+  # Prompt the user to enter the coefficients
+  puts "Enter the coefficient a (a should not be zero): "
+  a = gets.chomp.to_f
+  while a == 0
+    puts "Coefficient a cannot be zero. Please enter a valid value for a: "
+    a = gets.chomp.to_f
+  end
+  
+  puts "Enter the coefficient b: "
+  b = gets.chomp.to_f
+  
+  puts "Enter the coefficient c: "
+  c = gets.chomp.to_f
+  
+  # Find the roots and the type of roots
+  roots, root_type = find_roots(a, b, c)
+  
+  # Display the results
+  puts "The quadratic equation with coefficients a=#{a}, b=#{b}, c=#{c} has #{root_type}."
+  puts "The roots are: #{roots.join(' and ')}"
+  
